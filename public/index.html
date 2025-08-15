@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <title>Collab Paint</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+
+    <div class="toolbar">
+      <button data-tool="pencil">✏️</button>
+      <button data-tool="rect">⬛</button>
+      <button data-tool="circle">⚪</button>
+      <button data-tool="triangle">🔺</button>
+      <button data-tool="eraser">🩹</button>
+      <button id="undo">↩️ Undo</button>
+      <button id="clear">🧼 Clear all</button>
+
+      <div class="colors">
+        <div class="color" style="background: red" data-color="red"></div>
+        <div class="color" style="background: blue" data-color="blue"></div>
+        <div class="color" style="background: green" data-color="green"></div>
+        <div class="color" style="background: black" data-color="black"></div>
+        <div
+          class="color"
+          style="background: white; border: 1px solid #ccc"
+          data-color="white"
+        ></div>
+        <input type="color" id="colorPicker" />
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

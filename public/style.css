@@ -1,0 +1,47 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #eee;
+}
+
+canvas {
+    display: block;
+    background: white;
+}
+
+.toolbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #333;
+    color: white;
+    padding: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.toolbar button {
+    padding: 6px 10px;
+    border: none;
+    background: #555;
+    color: white;
+    cursor: pointer;
+}
+
+.toolbar button:hover {
+    background: #777;
+}
+
+.colors {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.color {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
