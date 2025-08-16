@@ -76,6 +76,12 @@ http://localhost:3000
 
 ---
 
+## Demo
+
+https://github.com/user-attachments/assets/5ac1d6c5-d3ab-4cb0-ab28-b94fa4a1d264
+
+note: my kid is in the mobile phone with the pencil green and I am drawing in my computer with pencil color blue simultaneously.
+
 ## Deployment on Render
 
 1. Create a free account on [Render](https://render.com/).
