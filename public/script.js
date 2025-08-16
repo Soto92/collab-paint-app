@@ -40,11 +40,19 @@ function drawShape(shape) {
   }
 }
 
+function getTouchPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: e.touches[0].clientX - rect.left,
+    y: e.touches[0].clientY - rect.top,
+  };
+}
+
+// --- Mouse Events ---
 canvas.addEventListener("mousedown", (e) => {
   startX = e.offsetX;
   startY = e.offsetY;
   drawing = true;
-
   if (currentTool === "pencil" || currentTool === "eraser") {
     currentStroke = { type: currentTool, color: currentColor, segments: [] };
   }
@@ -52,7 +60,6 @@ canvas.addEventListener("mousedown", (e) => {
 
 canvas.addEventListener("mousemove", (e) => {
   if (!drawing) return;
-
   if (currentTool === "pencil" || currentTool === "eraser") {
     const seg = { x0: startX, y0: startY, x1: e.offsetX, y1: e.offsetY };
     currentStroke.segments.push(seg);
@@ -65,11 +72,8 @@ canvas.addEventListener("mousemove", (e) => {
 canvas.addEventListener("mouseup", (e) => {
   if (!drawing) return;
   drawing = false;
-
   if (currentTool === "pencil" || currentTool === "eraser") {
-    if (currentStroke.segments.length > 0) {
-      socket.emit("op", currentStroke);
-    }
+    if (currentStroke.segments.length > 0) socket.emit("op", currentStroke);
     currentStroke = null;
   } else if (["rect", "circle", "triangle"].includes(currentTool)) {
     const shape = {
@@ -85,6 +89,42 @@ canvas.addEventListener("mouseup", (e) => {
   }
 });
 
+// --- Touch Events ---
+canvas.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  const pos = getTouchPos(e);
+  startX = pos.x;
+  startY = pos.y;
+  drawing = true;
+  if (currentTool === "pencil" || currentTool === "eraser") {
+    currentStroke = { type: currentTool, color: currentColor, segments: [] };
+  }
+});
+
+canvas.addEventListener("touchmove", (e) => {
+  e.preventDefault();
+  if (!drawing) return;
+  const pos = getTouchPos(e);
+  if (currentTool === "pencil" || currentTool === "eraser") {
+    const seg = { x0: startX, y0: startY, x1: pos.x, y1: pos.y };
+    currentStroke.segments.push(seg);
+    drawShape({ type: currentTool, color: currentColor, segments: [seg] });
+    startX = pos.x;
+    startY = pos.y;
+  }
+});
+
+canvas.addEventListener("touchend", (e) => {
+  e.preventDefault();
+  if (!drawing) return;
+  drawing = false;
+  if (currentTool === "pencil" || currentTool === "eraser") {
+    if (currentStroke.segments.length > 0) socket.emit("op", currentStroke);
+    currentStroke = null;
+  }
+});
+
+// --- Toolbar ---
 document
   .querySelectorAll(".toolbar button[data-tool]")
   .forEach((btn) =>
@@ -105,6 +145,7 @@ document
   .getElementById("colorPicker")
   .addEventListener("input", (e) => (currentColor = e.target.value));
 
+// --- Socket.IO ---
 socket.on("op", drawShape);
 socket.on("redraw", (ops) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
